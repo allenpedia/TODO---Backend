@@ -28,6 +28,48 @@ app.get("/notes", async (req , res)=>{
     })
 })
 
+app.get("/notes/findOne" , async (req , res) =>{
+    let title = req.body.title;
+    const notes = await noteModel.findOne({
+        title : title
+    })
+    if(notes === null){
+        res.status(404).json({
+            message : "Re check"
+        })
+        return;
+    }
+    res.status(200).json({
+        message : "find Successfully",
+        notes : notes
+    })
+})
+
+
+app.delete("/notes/:id", async (req , res) =>{
+    const id = req.params.id;
+
+    await noteModel.findOneAndDelete({
+        _id : id
+    })
+    res.status(200).json({
+        message : "Task Successfull"
+    })
+})
+
+app.patch("/notes/:id" , async(req , res) =>{
+    const id = req.params.id;
+    const desc = req.body.desc;
+    await noteModel.findOneAndUpdate({
+        _id : id
+    },{
+        message : desc
+    })
+
+    res.status(200).json({
+        message : "Task Successfull"
+    })
+})
 
 module.exports = app;
 
